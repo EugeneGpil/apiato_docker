@@ -1,0 +1,44 @@
+services:
+
+  php-fpm:
+    build:
+      context: ./containers/dev
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+        NPM_MIRROR: ${NPM_MIRROR:-https://registry.npmjs.org/}
+    volumes:
+      - ../apiato:/var/www/back
+      - ./containers/dev/logs/php-commandhistory:/commandhistory
+    user: root:root
+    command: bash -cl "php-fpm"
+    working_dir: /var/www/back
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0.34
+    volumes:
+      - ./containers/mysql/databases:/var/lib/mysql
+    ports:
+      - ${MYSQL_FORWARD_PORT:-33061}:3306
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-apiato}
+      MYSQL_USER: ${DB_USERNAME:-apiato}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-apiato}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-apiato}
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./containers/nginx
+      args:
+        APP_HOST: ${APP_HOST:-apiato.lc}
+    volumes:
+      - ../apiato:/var/www/back
+    ports:
+      - ${PORT_NGINX:-80}:80
+    depends_on:
+      - php-fpm
+    restart: unless-stopped
