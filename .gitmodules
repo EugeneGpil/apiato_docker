@@ -1,0 +1,3 @@
+[submodule "apiato"]
+	path = apiato
+	url = git@github.com:EugeneGpil/apiato.git
