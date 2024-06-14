@@ -84,6 +84,7 @@ Enter php container
 $ make exec
 # And run for example:
 $ php artisan migrate:rollback
+$ composer install
 ```
 
 
