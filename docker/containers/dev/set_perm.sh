@@ -26,3 +26,6 @@ set_shared_permissions "$1" "/var/www/back/storage"
 printf "Only user %s can write in passport files\n" "$1"
 chmod 644 /var/www/back/storage/oauth-private.key
 chmod 644 /var/www/back/storage/oauth-public.key
+
+printf "Execute files in /vendor/bin/ dir\n"
+chmod u+x /var/www/back/vendor/bin/*
