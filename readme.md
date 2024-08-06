@@ -38,7 +38,7 @@ $ id -g
 1000
 ```
 
-If group and user id a both equal to 1000, don't need to do anything.
+If group and user id are both equal to 1000, don't need to do anything.
 This is default value, already specified in `./docker/docker-compose.yml` file.
 
 If group or user id is different from 1000, specify it in `./docker.env` file.

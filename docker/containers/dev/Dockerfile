@@ -52,6 +52,10 @@ RUN echo "Create group app" && \
     echo "Install mysql extension" && \
     docker-php-ext-install pdo_mysql && \
     \
+    echo "Install pgsql extension" && \
+    apt-get install libpq-dev -y --no-install-recommends && \
+    docker-php-ext-install pdo_pgsql && \
+    \
     echo "Install math extension" && \
     docker-php-ext-install bcmath && \
     \

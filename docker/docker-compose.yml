@@ -14,27 +14,41 @@ services:
     command: bash -cl "php-fpm"
     working_dir: /var/www/back
     depends_on:
+      - pgsql
       - mysql
     restart: unless-stopped
 
+  pgsql:
+    image: postgres:16.3-bookworm
+    volumes:
+      - ./containers/pgsql/databases:/var/lib/postgresql/data
+    ports:
+      - ${PSQL_FORWARD_PORT:-54321}:5432
+    environment:
+      POSTGRES_DATABASE: ${DB_DATABASE:-AgileForge}
+      POSTGRES_USER: ${DB_USERNAME:-AgileForge}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-AgileForge}
+      PGDATA: /var/lib/postgresql/data/AgileForge
+    restart: unless-stopped
+
   mysql:
-    image: mysql:8.0.34
+    image: mysql:8.1
     volumes:
       - ./containers/mysql/databases:/var/lib/mysql
     ports:
       - ${MYSQL_FORWARD_PORT:-33061}:3306
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-apiato}
-      MYSQL_USER: ${DB_USERNAME:-apiato}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-apiato}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-apiato}
+      MYSQL_DATABASE: ${DB_DATABASE:-AgileForge}
+      MYSQL_USER: ${DB_USERNAME:-AgileForge}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-AgileForge}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-AgileForge}
     restart: unless-stopped
 
   nginx:
     build:
       context: ./containers/nginx
       args:
-        APP_HOST: ${APP_HOST:-apiato.lc}
+        APP_HOST: ${APP_HOST:-agile-forge.lc}
     volumes:
       - ../apiato:/var/www/back
     ports:
